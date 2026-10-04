@@ -1,0 +1,887 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خزنة المكتب والبيت - نظام متكامل</title>
+    
+    <!-- ملف الـ Manifest المدعوم برمجياً -->
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%AE%D8%B2%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8%20%D9%88%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%AE%D8%B2%D9%86%D8%A9%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0f19%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F2488%2F2488749.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4f46e5">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-container: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+            --item-bg: #f8fafc;
+        }
+
+        .dark {
+            --bg-body: #0b0f19;
+            --bg-container: #111827;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: #374151;
+            --item-bg: #1f2937;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: var(--bg-container);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .lock-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-container);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .lock-icon { font-size: 56px; margin-bottom: 15px; }
+        .lock-title { font-size: 20px; font-weight: 900; margin-bottom: 8px; color: var(--text-main); }
+        .lock-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
+        header {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            padding: 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            color: #ffffff;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .header-top h1 { font-size: 20px; font-weight: 900; }
+        .header-top p { font-size: 13px; color: #e0e7ff; }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-add {
+            background-color: #ffffff;
+            color: #4f46e5;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .summary-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 14px 18px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .summary-box span { font-size: 13px; color: #c7d2fe; }
+        .summary-box h2 { font-size: 20px; font-weight: 900; color: #34d399; }
+
+        .budget-alert-banner {
+            background-color: rgba(244, 63, 94, 0.2);
+            border: 1px solid #f43f5e;
+            color: #f43f5e;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        main {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .room-card {
+            padding: 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 120px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .room-card:hover { transform: scale(1.03); }
+
+        .room-income { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
+        .room-office { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; }
+        .room-personal { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; }
+        .room-family { background: linear-gradient(135deg, #db2777, #f43f5e); color: #fff; }
+        .room-rent { background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: #fff; }
+        .room-savings { background: linear-gradient(135deg, #0891b2, #06b6d4); color: #fff; }
+
+        .room-header { display: flex; justify-content: space-between; align-items: center; }
+        .room-tag { font-size: 11px; background: rgba(0,0,0,0.25); padding: 3px 10px; border-radius: 8px; color: #ffffff; font-weight: 700; }
+        .room-icon { font-size: 18px; }
+        .room-body h3 { font-size: 13px; color: #f1f5f9; font-weight: 700; }
+        .room-body p { font-size: 17px; font-weight: 900; color: #ffffff; margin-top: 4px; }
+
+        .room-screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--item-bg);
+            padding: 14px 18px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-back {
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .transactions-list, .reminders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-left: 4px;
+        }
+
+        .transaction-item, .reminder-item {
+            background-color: var(--item-bg);
+            border: 1px solid var(--border-color);
+            padding: 14px 16px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-info, .reminder-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-width: 62%;
+        }
+
+        .t-desc, .r-title { font-size: 14px; color: var(--text-main); font-weight: 700; }
+        .t-qty, .r-date { font-size: 12px; color: #818cf8; font-weight: 700; }
+        .t-date { color: var(--text-muted); font-size: 11px; }
+
+        .transaction-actions, .reminder-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .amount-val { font-size: 14px; font-weight: 900; }
+        .text-green { color: #10b981; }
+        .text-red { color: #f43f5e; }
+
+        .btn-action { background: none; border: none; cursor: pointer; font-size: 15px; padding: 6px; border-radius: 8px; }
+        .btn-edit { color: #38bdf8; }
+        .btn-delete { color: #f43f5e; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .hidden { display: none !important; }
+
+        .modal-content {
+            background-color: var(--bg-container);
+            border: 1px solid var(--border-color);
+            width: 92%;
+            max-width: 400px;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .modal-header h3 { font-size: 16px; font-weight: 900; color: var(--text-main); }
+        .btn-close { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+
+        .form-group {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label { font-size: 13px; color: var(--text-muted); font-weight: 700; }
+
+        .form-control {
+            width: 100%;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .form-control:focus { outline: none; border-color: #818cf8; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- شاشة القفل -->
+        <div id="lockScreen" class="lock-screen hidden">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-title">الخزنة مقفلة للأمان</div>
+            <div class="lock-desc">أدخل رمز المرور أو استخدم البصمة لفتح التطبيق</div>
+            
+            <div class="form-group" style="width: 100%; max-width: 280px;">
+                <input type="password" id="unlockPinInput" placeholder="رمز المرور" class="form-control" style="text-align: center; font-size: 20px; letter-spacing: 6px;">
+            </div>
+            
+            <button onclick="verifyUnlockPin()" class="btn-submit" style="max-width: 280px; margin-bottom: 10px;">فتح الخزنة</button>
+            <button onclick="tryBiometricUnlock()" id="biometricBtn" class="btn-submit" style="max-width: 280px; background: linear-gradient(135deg, #059669, #10b981); display: none;">👆 الدخول بالبصمة</button>
+        </div>
+
+        <!-- الهيدر -->
+        <header>
+            <div class="header-top">
+                <div>
+                    <h1>خزنة المكتب والبيت</h1>
+                    <p>نظام الغرف والتنبيهات الذكية</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="installAppBtn" onclick="installApp()" title="تثبيت التطبيق على الهاتف">📲</button>
+                    <button class="btn-icon" onclick="openSettingsModal()" title="إعدادات الإنذار والأمان">⚙️️</button>
+                    <button class="btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="تبديل الوضع">🌙</button>
+                    <button class="btn-add" onclick="openAddModal()">+ حركة</button>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div>
+                    <span>الصافي العام (للتوفير):</span>
+                    <h2 id="netBalance">0.00 دج</h2>
+                </div>
+                <div>
+                    <span id="countBadge" style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 12px; color: #fff; font-weight: bold; font-size: 13px;">0 عملية</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- الشاشة الرئيسية -->
+        <main id="mainScreen">
+            <div id="budgetAlertBanner" class="budget-alert-banner hidden">
+                <span id="alertText">⚠️ تحذير: لقد تجاوزت سقف المصاريف المحدد!</span>
+                <button onclick="openSettingsModal()" style="background:none; border:none; color:inherit; font-weight:bold; cursor:pointer; font-size:12px;">تعديل الحد</button>
+            </div>
+
+            <div class="section-title">غرف المصاريف والمداخيل:</div>
+
+            <div class="rooms-grid">
+                <div class="room-card room-income" onclick="openRoomScreen('مدخول يومي للمكتب')">
+                    <div class="room-header"><span class="room-tag">مدخول</span><span class="room-icon">📥</span></div>
+                    <div class="room-body"><h3>مداخيل المكتب</h3><p id="room_income">0 دج</p></div>
+                </div>
+                <div class="room-card room-office" onclick="openRoomScreen('مصاريف المكتب')">
+                    <div class="room-header"><span class="room-tag">مكتب</span><span class="room-icon">📄</span></div>
+                    <div class="room-body"><h3>لوازم المكتب</h3><p id="room_office_exp">0 دج</p></div>
+                </div>
+                <div class="room-card room-personal" onclick="openRoomScreen('مصاريف شخصية')">
+                    <div class="room-header"><span class="room-tag">شخصي</span><span class="room-icon">☕</span></div>
+                    <div class="room-body"><h3>مصاريف شخصية</h3><p id="room_personal">0 دج</p></div>
+                </div>
+                <div class="room-card room-family" onclick="openRoomScreen('مصاريف عائلية')">
+                    <div class="room-header"><span class="room-tag">عائلة</span><span class="room-icon">🏠</span></div>
+                    <div class="room-body"><h3>المصاريف العائلية</h3><p id="room_family">0 دج</p></div>
+                </div>
+                <div class="room-card room-rent" onclick="openRoomScreen('كراء (محل أو سكن)')">
+                    <div class="room-header"><span class="room-tag">التزامات</span><span class="room-icon">🏢</span></div>
+                    <div class="room-body"><h3>الكراء (محل وسكن)</h3><p id="room_rent">0 دج</p></div>
+                </div>
+                <div class="room-card room-savings" onclick="openRoomScreen('مبلغ مخصص للادخار')">
+                    <div class="room-header"><span class="room-tag">ادخار</span><span class="room-icon">💰</span></div>
+                    <div class="room-body"><h3>الادخار المتبقي</h3><p id="room_savings">0 دج</p></div>
+                </div>
+            </div>
+
+            <!-- منبه المواعيد -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                <div class="section-title" style="margin: 0;">منبه المواعيد والمشتريات:</div>
+                <button onclick="openReminderModal()" style="background: #4f46e5; color: #fff; border: none; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer;">+ إضافة موعد</button>
+            </div>
+            <div id="remindersList" class="reminders-list"></div>
+
+            <div class="section-title" style="margin-top: 6px;">كل العمليات المسجلة مؤخراً:</div>
+            <div id="allTransactionsList" class="transactions-list"></div>
+        </main>
+
+        <!-- الشاشة الفرعية للغرفة -->
+        <main id="roomScreen" class="hidden">
+            <div class="room-screen-header">
+                <h3 id="roomScreenTitle" style="font-size: 15px; font-weight: 900;">اسم الغرفة</h3>
+                <button class="btn-back" onclick="backToMainScreen()">العودة للغرف ⬅</button>
+            </div>
+            <div class="section-title">محتويات هذه الغرفة فقط:</div>
+            <div id="roomTransactionsList" class="transactions-list"></div>
+        </main>
+    </div>
+
+    <!-- نافذة إضافة حركة مالية -->
+    <div id="transactionModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">تسجيل حركة مالية جديدة</h3>
+                <button class="btn-close" onclick="toggleModal(false)">&times;</button>
+            </div>
+            <form id="transactionForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>اختر الغرفة / القسم:</label>
+                    <select id="category" class="form-control">
+                        <option value="مدخول يومي للمكتب">📥 مداخيل المكتب</option>
+                        <option value="مصاريف المكتب">📄 لوازم ومصاريف المكتب</option>
+                        <option value="مصاريف شخصية">☕ مصاريف شخصية</option>
+                        <option value="مصاريف عائلية">🏠 مصاريف عائلية</option>
+                        <option value="كراء (محل أو سكن)">🏢 كراء المحل أو السكن</option>
+                        <option value="مبلغ مخصص للادخار">💰 مبلغ مخصص للادخار</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>الكمية:</label>
+                        <input type="number" id="quantity" value="1" min="1" step="any" required class="form-control">
+                    </div>
+                    <div class="form-group" style="flex: 1.5;">
+                        <label>السعر / المبلغ (دج):</label>
+                        <input type="number" id="amount" step="any" placeholder="مثال: 2000" required class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>البيان / التفاصيل:</label>
+                    <input type="text" id="description" placeholder="ملاحظة سريعة..." class="form-control">
+                </div>
+                <button type="submit" class="btn-submit" id="saveBtnText">حفظ في الخزنة المحلية</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة موعد -->
+    <div id="reminderModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة موعد أو تنبيه جديد</h3>
+                <button class="btn-close" onclick="document.getElementById('reminderModal').classList.add('hidden')">&times;</button>
+            </div>
+            <form id="reminderForm">
+                <div class="form-group">
+                    <label>عنوان الموعد (مثلاً: كراء المحل):</label>
+                    <input type="text" id="reminderTitle" placeholder="عنوان التنبيه" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>تاريخ ووقت الاستحقاق:</label>
+                    <input type="datetime-local" id="reminderDate" required class="form-control">
+                </div>
+                <button type="submit" class="btn-submit">حفظ الموعد وتنبيهه</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة الإعدادات -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>الإعدادات والأمان والإنذار</h3>
+                <button class="btn-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>سقف المصاريف للإنذار (دج):</label>
+                <input type="number" id="budgetLimitInput" placeholder="مثال: 50000" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>تفعيل رمز المرور (PIN):</label>
+                <input type="password" id="setPinInput" placeholder="رمز مرور جديد (فارغ للإلغاء)" class="form-control">
+            </div>
+            <button onclick="saveAppSettings()" class="btn-submit">حفظ التعديلات</button>
+        </div>
+    </div>
+
+    <script>
+        let currentActiveRoom = null;
+        let deferredPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installAppBtn').classList.remove('hidden');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installAppBtn').classList.add('hidden');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert("لكي يظهر زر التثبيت في متصفح كروم، يرجى رفع الملف على استضافة ويب مجانية (مثل GitHub Pages) وفتحه عبر رابط HTTPS.");
+            }
+        }
+
+        function toggleTheme() {
+            const htmlTag = document.documentElement;
+            const btn = document.getElementById("themeToggleBtn");
+            if (htmlTag.classList.contains("dark")) {
+                htmlTag.classList.remove("dark");
+                localStorage.setItem("theme_preference", "light");
+                btn.textContent = "☀";
+            } else {
+                htmlTag.classList.add("dark");
+                localStorage.setItem("theme_preference", "dark");
+                btn.textContent = "🌙";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme_preference") || "dark";
+            const htmlTag = document.documentElement;
+            const btn = document.getElementById("themeToggleBtn");
+            if (savedTheme === "light") {
+                htmlTag.classList.remove("dark");
+                btn.textContent = "☀️";
+            } else {
+                htmlTag.classList.add("dark");
+                btn.textContent = "🌙";
+            }
+
+            checkAppLock();
+            loadData();
+            loadReminders();
+
+            document.getElementById("transactionForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const editId = document.getElementById("editId").value;
+                const category = document.getElementById("category").value;
+                const quantity = parseFloat(document.getElementById("quantity").value) || 1;
+                const unitAmount = parseFloat(document.getElementById("amount").value);
+                const description = document.getElementById("description").value;
+                
+                if (!unitAmount || isNaN(unitAmount)) return;
+
+                const totalAmount = quantity * unitAmount;
+                const type = category === "مدخول يومي للمكتب" ? "مدخول" : "مصروف";
+                let transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v8")) || [];
+
+                if (editId) {
+                    transactions = transactions.map(t => {
+                        if (t.id == editId) {
+                            return { ...t, category, type, quantity, unitAmount, amount: totalAmount, description };
+                        }
+                        return t;
+                    });
+                } else {
+                    const now = new Date();
+                    const date = now.toLocaleDateString('ar-DZ', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const time = now.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
+                    const dateTimeString = `${date} | ${time}`;
+
+                    const transaction = { id: Date.now(), type, category, quantity, unitAmount, amount: totalAmount, description, date: dateTimeString };
+                    transactions.unshift(transaction);
+                }
+
+                localStorage.setItem("rooms_finance_data_v8", JSON.stringify(transactions));
+                e.target.reset();
+                document.getElementById("editId").value = "";
+                document.getElementById("quantity").value = "1";
+                toggleModal(false);
+
+                if (currentActiveRoom) {
+                    openRoomScreen(currentActiveRoom);
+                } else {
+                    loadData();
+                }
+            });
+
+            document.getElementById("reminderForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const title = document.getElementById("reminderTitle").value;
+                const dateVal = document.getElementById("reminderDate").value;
+                if(!title || !dateVal) return;
+
+                let reminders = JSON.parse(localStorage.getItem("app_reminders_list")) || [];
+                reminders.push({ id: Date.now(), title, date: dateVal });
+                localStorage.setItem("app_reminders_list", JSON.stringify(reminders));
+
+                e.target.reset();
+                document.getElementById("reminderModal").classList.add("hidden");
+                loadReminders();
+            });
+        });
+
+        function checkAppLock() {
+            const savedPin = localStorage.getItem("app_secure_pin");
+            if (savedPin) {
+                document.getElementById("lockScreen").classList.remove("hidden");
+                if (window.PublicKeyCredential) {
+                    document.getElementById("biometricBtn").style.display = "block";
+                }
+            }
+        }
+
+        function verifyUnlockPin() {
+            const entered = document.getElementById("unlockPinInput").value;
+            const savedPin = localStorage.getItem("app_secure_pin");
+            if (entered === savedPin) {
+                document.getElementById("lockScreen").classList.add("hidden");
+                document.getElementById("unlockPinInput").value = "";
+            } else {
+                alert("رمز المرور غير صحيح!");
+            }
+        }
+
+        async function tryBiometricUnlock() {
+            try {
+                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+                if (available) {
+                    document.getElementById("lockScreen").classList.add("hidden");
+                } else {
+                    alert("المصادقة بالبصمة غير مدعومة.");
+                }
+            } catch (e) {
+                alert("تعذر استخدام البصمة.");
+            }
+        }
+
+        function openSettingsModal() {
+            document.getElementById("budgetLimitInput").value = localStorage.getItem("expense_budget_limit") || "";
+            document.getElementById("setPinInput").value = localStorage.getItem("app_secure_pin") || "";
+            document.getElementById("settingsModal").classList.remove("hidden");
+        }
+
+        function saveAppSettings() {
+            const budgetLimit = document.getElementById("budgetLimitInput").value;
+            const newPin = document.getElementById("setPinInput").value;
+
+            if (budgetLimit) {
+                localStorage.setItem("expense_budget_limit", budgetLimit);
+            } else {
+                localStorage.removeItem("expense_budget_limit");
+            }
+
+            if (newPin) {
+                localStorage.setItem("app_secure_pin", newPin);
+            } else {
+                localStorage.removeItem("app_secure_pin");
+            }
+
+            alert("تم حفظ الإعدادات بنجاح!");
+            document.getElementById("settingsModal").classList.add("hidden");
+            loadData();
+        }
+
+        function toggleModal(show) {
+            document.getElementById("transactionModal").classList.toggle("hidden", !show);
+        }
+
+        function openAddModal() {
+            document.getElementById("modalTitle").textContent = "تسجيل حركة مالية جديدة";
+            document.getElementById("saveBtnText").textContent = "حفظ في الخزنة المحلية";
+            document.getElementById("transactionForm").reset();
+            document.getElementById("editId").value = "";
+            document.getElementById("quantity").value = "1";
+            if (currentActiveRoom) {
+                document.getElementById("category").value = currentActiveRoom;
+            }
+            toggleModal(true);
+        }
+
+        function openReminderModal() {
+            document.getElementById("reminderModal").classList.remove("hidden");
+        }
+
+        function loadData() {
+            const transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v8")) || [];
+            
+            let totals = {
+                "مدخول يومي للمكتب": 0,
+                "مصاريف المكتب": 0,
+                "مصاريف شخصية": 0,
+                "مصاريف عائلية": 0,
+                "كراء (محل أو سكن)": 0,
+                "مبلغ مخصص للادخار": 0
+            };
+
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            transactions.forEach(t => {
+                if (totals[t.category] !== undefined) {
+                    totals[t.category] += t.amount;
+                }
+                if (t.type === "مدخول") totalIncome += t.amount;
+                else totalExpense += t.amount;
+            });
+
+            document.getElementById("room_income").textContent = totals["مدخول يومي للمكتب"].toLocaleString() + " دج";
+            document.getElementById("room_office_exp").textContent = totals["مصاريف المكتب"].toLocaleString() + " دج";
+            document.getElementById("room_personal").textContent = totals["مصاريف شخصية"].toLocaleString() + " دج";
+            document.getElementById("room_family").textContent = totals["مصاريف عائلية"].toLocaleString() + " دج";
+            document.getElementById("room_rent").textContent = totals["كراء (محل أو سكن)"].toLocaleString() + " دج";
+            document.getElementById("room_savings").textContent = totals["مبلغ مخصص للادخار"].toLocaleString() + " دج";
+
+            document.getElementById("netBalance").textContent = (totalIncome - totalExpense).toLocaleString() + " دج";
+            document.getElementById("countBadge").textContent = `${transactions.length} عملية`;
+
+            const budgetLimit = parseFloat(localStorage.getItem("expense_budget_limit"));
+            const alertBanner = document.getElementById("budgetAlertBanner");
+            if (budgetLimit && !isNaN(budgetLimit) && totalExpense > budgetLimit) {
+                alertBanner.classList.remove("hidden");
+                document.getElementById("alertText").textContent = `⚠️ تنبيه: إجمالي المصاريف (${totalExpense.toLocaleString()} دج) تجاوز الحد (${budgetLimit.toLocaleString()} دج)!`;
+            } else {
+                alertBanner.classList.add("hidden");
+            }
+            
+            renderList(transactions, "allTransactionsList");
+        }
+
+        function loadReminders() {
+            let reminders = JSON.parse(localStorage.getItem("app_reminders_list")) || [];
+            const container = document.getElementById("remindersList");
+            container.innerHTML = "";
+
+            if (reminders.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 12px;">لا توجد مواعيد أو تنبيهات مسجلة.</div>`;
+                return;
+            }
+
+            const now = new Date();
+            reminders.forEach(r => {
+                const rDate = new Date(r.date);
+                const isPassed = rDate < now;
+                const card = document.createElement("div");
+                card.className = "reminder-item";
+                card.style.borderColor = isPassed ? "#f43f5e" : "var(--border-color)";
+                card.innerHTML = `
+                    <div class="reminder-info">
+                        <span class="r-title">🔔 ${r.title}</span>
+                        <span class="r-date">📅 ${r.date.replace('T', ' الوقت: ')} ${isPassed ? ' (مستحق/فائت)' : ''}</span>
+                    </div>
+                    <div class="reminder-actions">
+                        <button class="btn-action btn-delete" onclick="deleteReminder(${r.id})" title="حذف">&#128465;</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deleteReminder(id) {
+            let reminders = JSON.parse(localStorage.getItem("app_reminders_list")) || [];
+            reminders = reminders.filter(r => r.id !== id);
+            localStorage.setItem("app_reminders_list", JSON.stringify(reminders));
+            loadReminders();
+        }
+
+        function openRoomScreen(roomName) {
+            currentActiveRoom = roomName;
+            document.getElementById("mainScreen").classList.add("hidden");
+            document.getElementById("roomScreen").classList.remove("hidden");
+            document.getElementById("roomScreenTitle").textContent = `غرفة: ${roomName}`;
+
+            const transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v8")) || [];
+            const roomTransactions = transactions.filter(t => t.category === roomName);
+            renderList(roomTransactions, "roomTransactionsList");
+        }
+
+        function backToMainScreen() {
+            currentActiveRoom = null;
+            document.getElementById("roomScreen").classList.add("hidden");
+            document.getElementById("mainScreen").classList.remove("hidden");
+            loadData();
+        }
+
+        function renderList(transactions, containerId) {
+            const listContainer = document.getElementById(containerId);
+            listContainer.innerHTML = "";
+
+            if (transactions.length === 0) {
+                listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px;">لا توجد عمليات مسجلة هنا حالياً.</div>`;
+                return;
+            }
+
+            transactions.forEach(t => {
+                const isIncome = t.type === "مدخول";
+                const sign = isIncome ? "+" : "-";
+                const colorClass = isIncome ? "text-green" : "text-red";
+                const qtyText = t.quantity && t.quantity > 1 ? `الكمية: ${t.quantity}` : '';
+
+                const card = document.createElement("div");
+                card.className = "transaction-item";
+                card.innerHTML = `
+                    <div class="transaction-info">
+                        ${containerId === 'allTransactionsList' ? `<span style="font-size: 11px; color: #818cf8; font-weight: 700;">${t.category}</span>` : ''}
+                        <span class="t-desc">${t.description || 'بدون تفاصيل'}</span>
+                        ${qtyText ? `<span class="t-qty">${qtyText}</span>` : ''}
+                        <span class="t-date">📅 ${t.date}</span>
+                    </div>
+                    <div class="transaction-actions">
+                        <span class="amount-val ${colorClass}">${sign}${t.amount.toLocaleString()} دج</span>
+                        <button class="btn-action btn-edit" onclick="editTransaction(${t.id})" title="تعديل">&#9999;&#65039;</button>
+                        <button class="btn-action btn-delete" onclick="deleteTransaction(${t.id})" title="حذف">&#128465;</button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function editTransaction(id) {
+            const transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v8")) || [];
+            const t = transactions.find(item => item.id == id);
+            if (!t) return;
+
+            document.getElementById("editId").value = t.id;
+            document.getElementById("category").value = t.category;
+            document.getElementById("quantity").value = t.quantity || 1;
+            document.getElementById("amount").value = t.unitAmount || t.amount;
+            document.getElementById("description").value = t.description;
+
+            document.getElementById("modalTitle").textContent = "تعديل الحركة المالية";
+            document.getElementById("saveBtnText").textContent = "تحديث البيانات";
+            toggleModal(true);
+        }
+
+        function deleteTransaction(id) {
+            if (!confirm("هل أنت متأكد من حذف هذه الحركة؟")) return;
+            let transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v8")) || [];
+            transactions = transactions.filter(t => t.id !== id);
+            localStorage.setItem("rooms_finance_data_v8", JSON.stringify(transactions));
+
+            if (currentActiveRoom) {
+                openRoomScreen(currentActiveRoom);
+            } else {
+                loadData();
+            }
+        }
+    </script>
+</body>
+</html>

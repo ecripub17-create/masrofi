@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خزنة المكتب والبيت - نظام متكامل</title>
     
-    <!-- ملف الـ Manifest المدعوم برمجياً -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%AE%D8%B2%D9%86%D8%A9%20%D8%A7%D9%84%D9%85%D9%83%D8%AA%D8%A8%20%D9%88%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%AE%D8%B2%D9%86%D8%A9%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0f19%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F2488%2F2488749.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%AE%D8%B2%D9%86%D8%A9%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%AE%D8%B2%D9%86%D8%A9%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b0f19%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F2488%2F2488749.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -140,11 +139,10 @@
             gap: 6px;
             border: 1px solid rgba(255,255,255,0.15);
             text-align: center;
-            cursor: pointer;
         }
 
         .summary-box span { font-size: 12px; color: #c7d2fe; }
-        .summary-box h2 { font-size: 16px; font-weight: 700; color: #fdf498; line-height: 1.5; }
+        .summary-box h2 { font-size: 15px; font-weight: 700; color: #fdf498; line-height: 1.5; min-height: 45px; display: flex; align-items: center; justify-content: center; }
 
         .budget-alert-banner {
             background-color: rgba(244, 63, 94, 0.2);
@@ -192,7 +190,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 120px;
+            min-height: 100px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
@@ -208,8 +206,7 @@
         .room-header { display: flex; justify-content: space-between; align-items: center; }
         .room-tag { font-size: 11px; background: rgba(0,0,0,0.25); padding: 3px 10px; border-radius: 8px; color: #ffffff; font-weight: 700; }
         .room-icon { font-size: 18px; }
-        .room-body h3 { font-size: 13px; color: #f1f5f9; font-weight: 700; }
-        .room-body p { font-size: 17px; font-weight: 900; color: #ffffff; margin-top: 4px; }
+        .room-body h3 { font-size: 14px; color: #ffffff; font-weight: 700; margin-top: 10px; }
 
         .room-screen-header {
             display: flex;
@@ -398,9 +395,9 @@
                 </div>
             </div>
 
-            <!-- تم استبدال الصافي العام بالأذكار والأدعية -->
-            <div class="summary-box" onclick="changeAdhkar()" title="اضغط لتغيير الذكر">
-                <span>✨ ذكر وخاطرة (اضغط للتغيير):</span>
+            <!-- أذكار تتغير آلياً -->
+            <div class="summary-box">
+                <span>✨ ذكر وخاطرة (متجدد آلياً):</span>
                 <h2 id="adhkarText">"لا إله إلا أنت سبحانك إني كنت من الظالمين"</h2>
             </div>
         </header>
@@ -417,27 +414,27 @@
             <div class="rooms-grid">
                 <div class="room-card room-income" onclick="openRoomScreen('مدخول يومي للمكتب')">
                     <div class="room-header"><span class="room-tag">مدخول</span><span class="room-icon">📥</span></div>
-                    <div class="room-body"><h3>مداخيل المكتب</h3><p id="room_income">0 دج</p></div>
+                    <div class="room-body"><h3>مداخيل المكتب</h3></div>
                 </div>
                 <div class="room-card room-office" onclick="openRoomScreen('مصاريف المكتب')">
                     <div class="room-header"><span class="room-tag">مكتب</span><span class="room-icon">📄</span></div>
-                    <div class="room-body"><h3>لوازم المكتب</h3><p id="room_office_exp">0 دج</p></div>
+                    <div class="room-body"><h3>لوازم المكتب</h3></div>
                 </div>
                 <div class="room-card room-personal" onclick="openRoomScreen('مصاريف شخصية')">
                     <div class="room-header"><span class="room-tag">شخصي</span><span class="room-icon">☕</span></div>
-                    <div class="room-body"><h3>مصاريف شخصية</h3><p id="room_personal">0 دج</p></div>
+                    <div class="room-body"><h3>مصاريف شخصية</h3></div>
                 </div>
                 <div class="room-card room-family" onclick="openRoomScreen('مصاريف عائلية')">
                     <div class="room-header"><span class="room-tag">عائلة</span><span class="room-icon">🏠</span></div>
-                    <div class="room-body"><h3>المصاريف العائلية</h3><p id="room_family">0 دج</p></div>
+                    <div class="room-body"><h3>المصاريف العائلية</h3></div>
                 </div>
                 <div class="room-card room-rent" onclick="openRoomScreen('كراء (محل أو سكن)')">
                     <div class="room-header"><span class="room-tag">التزامات</span><span class="room-icon">🏢</span></div>
-                    <div class="room-body"><h3>الكراء (محل وسكن)</h3><p id="room_rent">0 دج</p></div>
+                    <div class="room-body"><h3>الكراء (محل وسكن)</h3></div>
                 </div>
                 <div class="room-card room-savings" onclick="openRoomScreen('مبلغ مخصص للادخار')">
                     <div class="room-header"><span class="room-tag">ادخار</span><span class="room-icon">💰</span></div>
-                    <div class="room-body"><h3>الادخار المتبقي</h3><p id="room_savings">0 دج</p></div>
+                    <div class="room-body"><h3>الادخار المتبقي</h3></div>
                 </div>
             </div>
 
@@ -459,7 +456,6 @@
                     <h3 id="roomScreenTitle" style="font-size: 15px; font-weight: 900;">اسم الغرفة</h3>
                     <button class="btn-back" onclick="backToMainScreen()">العودة للغرف ⬅</button>
                 </div>
-                <!-- عرض مجموع الغرفة بداخله -->
                 <div class="room-total-banner">
                     <span>إجمالي هذه الغرفة:</span>
                     <span id="roomSpecificTotal" style="color: #34d399;">0 دج</span>
@@ -551,7 +547,6 @@
     </div>
 
     <script>
-        // تفعيل العمل بدون إنترنت عبر Service Worker برمجياً
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', e => { self.skipWaiting(); });
@@ -573,10 +568,18 @@
         ];
         let currentAdhkarIndex = 0;
 
-        function changeAdhkar() {
+        // تغيير الأذكار آلياً كل 6 ثوانٍ
+        setInterval(() => {
             currentAdhkarIndex = (currentAdhkarIndex + 1) % adhkarList.length;
-            document.getElementById("adhkarText").textContent = adhkarList[currentAdhkarIndex];
-        }
+            const el = document.getElementById("adhkarText");
+            if(el) {
+                el.style.opacity = 0;
+                setTimeout(() => {
+                    el.textContent = adhkarList[currentAdhkarIndex];
+                    el.style.opacity = 1;
+                }, 300);
+            }
+        }, 6000);
 
         let currentActiveRoom = null;
         let deferredPrompt = null;
@@ -621,7 +624,7 @@
             const btn = document.getElementById("themeToggleBtn");
             if (savedTheme === "light") {
                 htmlTag.classList.remove("dark");
-                btn.textContent = "☀️";
+                btn.textContent = "☀️️";
             } else {
                 htmlTag.classList.add("dark");
                 btn.textContent = "🌙";
@@ -634,7 +637,6 @@
             document.getElementById("transactionForm").addEventListener("submit", (e) => {
                 e.preventDefault();
                 const editId = document.getElementById("editId").value;
-                // إذا كنا داخل غرفة، نضمن أن الحركة تتبع لها تلقائياً
                 const category = currentActiveRoom ? currentActiveRoom : document.getElementById("category").value;
                 const quantity = parseFloat(document.getElementById("quantity").value) || 1;
                 const unitAmount = parseFloat(document.getElementById("amount").value);
@@ -644,6 +646,8 @@
 
                 const totalAmount = quantity * unitAmount;
                 const type = category === "مدخول يومي للمكتب" ? "مدخول" : "مصروف";
+                
+                // استخدام مفتاح تخزين ثابت يحافظ على البيانات بشكل دائم ولا يفقدها أبداً عند التحديث
                 let transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v9")) || [];
 
                 if (editId) {
@@ -696,7 +700,6 @@
             const savedPin = localStorage.getItem("app_secure_pin");
             if (savedPin) {
                 document.getElementById("lockScreen").classList.remove("hidden");
-                // إظهار زر البصمة إذا كانت المدعومة ومتاحة
                 if (window.PublicKeyCredential) {
                     document.getElementById("biometricBtn").style.display = "block";
                 }
@@ -716,24 +719,17 @@
 
         async function tryBiometricUnlock() {
             try {
-                // محاكاة أو طلب مصادقة الويب الحيوي (Biometric WebAuthn)
                 const publicKey = {
                     challenge: new Uint8Array([21,31,101,114,32,98,105,111]),
                     rp: { name: "خزنة المكتب والبيت" },
-                    user: {
-                        id: new Uint8Array([1]),
-                        name: "user@local",
-                        displayName: "المستخدم"
-                    },
+                    user: { id: new Uint8Array([1]), name: "user@local", displayName: "المستخدم" },
                     pubKeyCredParams: [{ alg: -7, type: "public-key" }],
                     timeout: 60000,
                     attestation: "none"
                 };
-                
                 await navigator.credentials.create({ publicKey });
                 document.getElementById("lockScreen").classList.add("hidden");
             } catch (e) {
-                // إذا فشل النظام الأمني التوثيقي المتقدم للمتصفح، نتيح تجاوزًا ذكيًا أو إشعاراً واضحاً
                 const fallbackPin = prompt("أدخل رمز المرور السري لفتح الخزنة:");
                 if (fallbackPin === localStorage.getItem("app_secure_pin")) {
                     document.getElementById("lockScreen").classList.add("hidden");
@@ -775,27 +771,22 @@
         }
 
         function openAddModal() {
-            currentActiveRoom = null; // من الشاشة الرئيسية، يمكن اختيار أي غرفة
+            currentActiveRoom = null;
             document.getElementById("modalTitle").textContent = "تسجيل حركة مالية جديدة";
             document.getElementById("saveBtnText").textContent = "حفظ في الخزنة المحلية";
             document.getElementById("transactionForm").reset();
             document.getElementById("editId").value = "";
             document.getElementById("quantity").value = "1";
-            
-            // إظهار حقل اختيار الغرفة
             document.getElementById("categoryGroupWrapper").style.display = "flex";
             toggleModal(true);
         }
 
-        // إضافة حركة خاصة داخل الغرفة المفتوحة حصراً دون إظهار باقي الغرف
         function openRoomAddModal() {
             document.getElementById("modalTitle").textContent = `إضافة حركة في: ${currentActiveRoom}`;
             document.getElementById("saveBtnText").textContent = "حفظ الحركة في الغرفة";
             document.getElementById("transactionForm").reset();
             document.getElementById("editId").value = "";
             document.getElementById("quantity").value = "1";
-            
-            // إخفاء حقل اختيار الغرفة لأنها محددة سلفاً
             document.getElementById("categoryGroupWrapper").style.display = "none";
             toggleModal(true);
         }
@@ -806,31 +797,11 @@
 
         function loadData() {
             const transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v9")) || [];
-            
-            let totals = {
-                "مدخول يومي للمكتب": 0,
-                "مصاريف المكتب": 0,
-                "مصاريف شخصية": 0,
-                "مصاريف عائلية": 0,
-                "كراء (محل أو سكن)": 0,
-                "مبلغ مخصص للادخار": 0
-            };
-
             let totalExpense = 0;
 
             transactions.forEach(t => {
-                if (totals[t.category] !== undefined) {
-                    totals[t.category] += t.amount;
-                }
                 if (t.type !== "مدخول") totalExpense += t.amount;
             });
-
-            document.getElementById("room_income").textContent = totals["مدخول يومي للمكتب"].toLocaleString() + " دج";
-            document.getElementById("room_office_exp").textContent = totals["مصاريف المكتب"].toLocaleString() + " دج";
-            document.getElementById("room_personal").textContent = totals["مصاريف شخصية"].toLocaleString() + " دج";
-            document.getElementById("room_family").textContent = totals["مصاريف عائلية"].toLocaleString() + " دج";
-            document.getElementById("room_rent").textContent = totals["كراء (محل أو سكن)"].toLocaleString() + " دج";
-            document.getElementById("room_savings").textContent = totals["مبلغ مخصص للادخار"].toLocaleString() + " دج";
 
             const budgetLimit = parseFloat(localStorage.getItem("expense_budget_limit"));
             const alertBanner = document.getElementById("budgetAlertBanner");
@@ -890,7 +861,6 @@
             const transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v9")) || [];
             const roomTransactions = transactions.filter(t => t.category === roomName);
             
-            // حساب وإظهار إجمالي الغرفة بداخلها
             const roomTotal = roomTransactions.reduce((sum, t) => sum + t.amount, 0);
             document.getElementById("roomSpecificTotal").textContent = roomTotal.toLocaleString() + " دج";
 
@@ -949,7 +919,6 @@
             document.getElementById("amount").value = t.unitAmount || t.amount;
             document.getElementById("description").value = t.description;
 
-            // إذا كنا في شاشة الغرفة، نخفي اختيار الغرفة، وإن كنا بالرئيسية نظهره
             if (currentActiveRoom) {
                 document.getElementById("categoryGroupWrapper").style.display = "none";
             } else {

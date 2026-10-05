@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خزنة المكتب والبيت - نظام متكامل</title>
     
-    <<link rel="manifest" href="manifest.json">>
+    <link rel="manifest" href="manifest.json">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -568,7 +568,6 @@
         ];
         let currentAdhkarIndex = 0;
 
-        // تغيير الأذكار آلياً كل 6 ثوانٍ
         setInterval(() => {
             currentAdhkarIndex = (currentAdhkarIndex + 1) % adhkarList.length;
             const el = document.getElementById("adhkarText");
@@ -624,7 +623,7 @@
             const btn = document.getElementById("themeToggleBtn");
             if (savedTheme === "light") {
                 htmlTag.classList.remove("dark");
-                btn.textContent = "☀️️";
+                btn.textContent = "☀";
             } else {
                 htmlTag.classList.add("dark");
                 btn.textContent = "🌙";
@@ -647,7 +646,6 @@
                 const totalAmount = quantity * unitAmount;
                 const type = category === "مدخول يومي للمكتب" ? "مدخول" : "مصروف";
                 
-                // استخدام مفتاح تخزين ثابت يحافظ على البيانات بشكل دائم ولا يفقدها أبداً عند التحديث
                 let transactions = JSON.parse(localStorage.getItem("rooms_finance_data_v9")) || [];
 
                 if (editId) {

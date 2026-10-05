@@ -6,12 +6,12 @@
   "background_color": "#0b0f19",
   "theme_color": "#4f46e5",
   "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2488/2488749.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
+  {
+    "src": "icon.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }
+]
   "id": "Ahmed Bouaziz",
   "lang": "ar"
 }
